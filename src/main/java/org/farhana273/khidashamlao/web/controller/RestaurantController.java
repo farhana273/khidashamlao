@@ -23,21 +23,24 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(path = "/restaurant")
 public class RestaurantController {
+	
 	private final RestaurantServiceImpl restaurantService;
 
 	@Autowired
 	public RestaurantController(RestaurantServiceImpl restaurantService) {
+		
 		this.restaurantService = restaurantService;
 
 	}
 
 	/**
-	 *GET /restaurant/welcome: Displays a welcome message
+	 * GET /restaurant/welcome: Displays a welcome message
 	 *
 	 * @return A success message
 	 */
 	@RequestMapping(path = "/welcome")
 	public String welcome() {
+		
 		return "Welcome to the restaurant panel";
 	}
 
@@ -49,8 +52,36 @@ public class RestaurantController {
 	 */
 	@PostMapping(path = "")
 	public ResponseEntity<Restaurant> addNewRestaurant(@RequestBody Restaurant restaurant) {
+		
 		restaurantService.saveRestaurant(restaurant);
 		return new ResponseEntity<Restaurant>(restaurant, HttpStatus.OK);
+	}
+	
+	/**
+	 * GET /restaurant/:id : Get a restaurant from the database with the given id
+	 *
+	 *@param id specifies the id of the object of the restaurant that is to be shown from the database
+	 *@return the ResponseEntity with status 200 (OK) and with restaurant in the body, or with status 404 (Not Found)
+	 */
+	@GetMapping(path = "{id}")
+	public ResponseEntity<Restaurant> showRestaurant(@PathVariable long id) {
+		
+		Restaurant restaurant = restaurantService.findRestaurant(id);
+		return new ResponseEntity<Restaurant>(restaurant, HttpStatus.OK);
+	}
+
+	/**
+	 * GET /restaurant: Get all restaurants from the database 
+	 *
+	 *@param pageable the pagination information
+	 *@return the ResponseEntity with status 200 (OK) and with restaurant in the body, or with status 404 (Not Found)
+	 */
+	@GetMapping(path = "")
+	public ResponseEntity<List<Restaurant>> getAllRestaurants(Pageable pageable) {
+		
+		Page<Restaurant> page = restaurantService.showAllRestaurants(pageable);
+		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "localhost:8080/restaurant");
+		return new ResponseEntity<List<Restaurant>>(page.getContent(), HttpStatus.OK);
 	}
 
 	/**
@@ -66,32 +97,6 @@ public class RestaurantController {
 		restaurantService.deleteRestaurant(id);
 		return "restaurant deleted";
 	}
-
-	/**
-	 * GET /restaurant/:id : Get a restaurant from the database with the given id
-	 *
-	 *@param id specifies the id of the object of the restaurant that is to be shown from the database
-	 *@return the ResponseEntity with status 200 (OK) and with restaurant in the body, or with status 404 (Not Found)
-	 */
-	@GetMapping(path = "{id}")
-	public ResponseEntity<Restaurant> showRestaurant(@PathVariable long id) {
-		Restaurant restaurant = restaurantService.findRestaurant(id);
-		return new ResponseEntity<Restaurant>(restaurant, HttpStatus.OK);
-	}
-
-	/**
-	 * GET /restaurant: Get all restaurants from the database 
-	 *
-	 *@param pageable the pagination information
-	 *@return the ResponseEntity with status 200 (OK) and with restaurant in the body, or with status 404 (Not Found)
-	 */
-	@GetMapping(path = "")
-	public ResponseEntity<List<Restaurant>> getAllRestaurants(Pageable pageable) {
-		Page<Restaurant> page = restaurantService.showAllRestaurants(pageable);
-		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "localhost:8080/restaurant");
-		return new ResponseEntity<List<Restaurant>>(page.getContent(), HttpStatus.OK);
-	}
-
 }
 
 

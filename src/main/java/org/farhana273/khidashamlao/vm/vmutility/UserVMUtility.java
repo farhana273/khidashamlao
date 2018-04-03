@@ -1,4 +1,4 @@
-package org.farhana273.khidashamlao.vmutility;
+package org.farhana273.khidashamlao.vm.vmutility;
 
 import org.farhana273.khidashamlao.domain.User;
 import org.farhana273.khidashamlao.vm.UserVM;
@@ -6,6 +6,7 @@ import org.farhana273.khidashamlao.vm.UserVM;
 public class UserVMUtility {
 
     public static User mapToUser(UserVM userVM) {
+    	
         User user = new User();
         user.setFirstName(userVM.getFirstName());
         user.setLastName(userVM.getLastName());

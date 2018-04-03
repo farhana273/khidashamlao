@@ -9,4 +9,5 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public interface OfferRepository extends JpaRepository<Offer, Long> {
+	
 }

@@ -23,21 +23,23 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(path = "/offer")
 public class OfferController {
+	
 	private final OfferServiceImpl offerService;
 
 	@Autowired
 	public OfferController(OfferServiceImpl offerService) {
+		
 		this.offerService = offerService;
-
-	}
+}
 
 	/**
-	 *GET/offer/welcome: Displays a welcome message
+	 * GET/offer/welcome: Displays a welcome message
 	 *
 	 * @return A success message
 	 */
 	@RequestMapping(path = "/welcome")
 	public String welcome() {
+		
 		return "Welcome to the offer panel";
 	}
 
@@ -49,31 +51,20 @@ public class OfferController {
 	 */
 	@PostMapping(path = "")
 	public ResponseEntity<Offer> addNewOffer(@RequestBody Offer offer) {
+		
 		offerService.saveOffer(offer);
 		return new ResponseEntity<Offer>(offer, HttpStatus.OK);
 	}
-
-	/**
-	 * DELETE /offer/delete/:id : Deletes a offer.
-	 *
-	 * @param id is the id of the object that is to be deleted
-	 * @return A success message
-	 */
-	@DeleteMapping(path = "/delete/{id}")
-	public String deleteOffer(@PathVariable long id) {
-
-		offerService.deleteOffer(id);
-		return "Offer deleted";
-	}
-
+	
 	/**
 	 * GET /offer/:id : Get a Offer from the database with the given id
 	 *
-	 *@param id specifies the id of the object of the offer that is to be shown from the database
-	 *@return the ResponseEntity with status 200 (OK) and with offer in the body, or with status 404 (Not Found)
+	 * @param id specifies the id of the object of the offer that is to be shown from the database
+	 * @return the ResponseEntity with status 200 (OK) and with offer in the body, or with status 404 (Not Found)
 	 */
 	@GetMapping(path = "{id}")
 	public ResponseEntity<Offer> showOffer(@PathVariable long id) {
+		
 		Offer offer = offerService.findOffer(id);
 		return new ResponseEntity<Offer>(offer, HttpStatus.OK);
 	}
@@ -81,16 +72,30 @@ public class OfferController {
 	/**
 	 * GET /offer: Get all offers from the database 
 	 *
-	 *@param pageable the pagination information
-	 *@return the ResponseEntity with status 200 (OK) and with offer in the body, or with status 404 (Not Found)
+	 * @param pageable the pagination information
+	 * @return the ResponseEntity with status 200 (OK) and with offer in the body, or with status 404 (Not Found)
 	 */
 	@GetMapping(path = "")
 	public ResponseEntity<List<Offer>> getAllOffers(Pageable pageable) {
+		
 		Page<Offer> page = offerService.showAllOffers(pageable);
 		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "localhost:8080/offer");
 		return new ResponseEntity<List<Offer>>(page.getContent(), HttpStatus.OK);
 	}
 
+
+	/**
+	 * DELETE /offer/:id : Deletes a offer.
+	 *
+	 * @param id is the id of the object that is to be deleted
+	 * @return A success message
+	 */
+	@DeleteMapping(path = "{id}")
+	public String deleteOffer(@PathVariable long id) {
+
+		offerService.deleteOffer(id);
+		return "Offer deleted";
+	}
 }
 
 

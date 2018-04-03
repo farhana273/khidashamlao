@@ -8,6 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Entity
 @Table(name = "environment")
 public class Environment {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Value("${some.key:0}")

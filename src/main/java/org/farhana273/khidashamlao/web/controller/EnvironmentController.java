@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(path = "/environment")
 public class EnvironmentController {
+	
 	private final EnvironmentServiceImpl environmentService;
 
 	@Autowired
@@ -32,7 +33,7 @@ public class EnvironmentController {
 	}
 
 	/**
-	 *GET/environment/welcome: Displays a welcome message
+	 * GET/environment/welcome: Displays a welcome message
 	 *
 	 * @return A success message
 	 */
@@ -52,6 +53,31 @@ public class EnvironmentController {
 		environmentService.saveEnvironment(environment);
 		return new ResponseEntity<Environment>(environment, HttpStatus.OK);
 	}
+	
+	/**
+	 * GET /environment/:id : Get a Environment from the database with the given id
+	 *
+	 * @param id specifies the id of the object of the environment that is to be shown from the database
+	 * @return the ResponseEntity with status 200 (OK) and with environment in the body, or with status 404 (Not Found)
+	 */
+	@GetMapping(path = "{id}")
+	public ResponseEntity<Environment> showEnvironment(@PathVariable long id) {
+		Environment environment = environmentService.findEnvironment(id);
+		return new ResponseEntity<Environment>(environment, HttpStatus.OK);
+	}
+
+	/**
+	 * GET /environment: Get all environments from the database 
+	 *
+	 * @param pageable the pagination information
+	 * @return the ResponseEntity with status 200 (OK) and with environment in the body, or with status 404 (Not Found)
+	 */
+	@GetMapping(path = "")
+	public ResponseEntity<List<Environment>> getAllEnvironments(Pageable pageable) {
+		Page<Environment> page = environmentService.showAllEnvironments(pageable);
+		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "localhost:8080/environment");
+		return new ResponseEntity<List<Environment>>(page.getContent(), HttpStatus.OK);
+	}
 
 	/**
 	 * DELETE /environment/delete/:id : Deletes a environment.
@@ -65,32 +91,6 @@ public class EnvironmentController {
 		environmentService.deleteEnvironment(id);
 		return "Environment deleted";
 	}
-
-	/**
-	 * GET /environment/:id : Get a Environment from the database with the given id
-	 *
-	 *@param id specifies the id of the object of the environment that is to be shown from the database
-	 *@return the ResponseEntity with status 200 (OK) and with environment in the body, or with status 404 (Not Found)
-	 */
-	@GetMapping(path = "{id}")
-	public ResponseEntity<Environment> showEnvironment(@PathVariable long id) {
-		Environment environment = environmentService.findEnvironment(id);
-		return new ResponseEntity<Environment>(environment, HttpStatus.OK);
-	}
-
-	/**
-	 * GET /environment: Get all environments from the database 
-	 *
-	 *@param pageable the pagination information
-	 *@return the ResponseEntity with status 200 (OK) and with environment in the body, or with status 404 (Not Found)
-	 */
-	@GetMapping(path = "")
-	public ResponseEntity<List<Environment>> getAllEnvironments(Pageable pageable) {
-		Page<Environment> page = environmentService.showAllEnvironments(pageable);
-		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "localhost:8080/environment");
-		return new ResponseEntity<List<Environment>>(page.getContent(), HttpStatus.OK);
-	}
-
 }
 
 

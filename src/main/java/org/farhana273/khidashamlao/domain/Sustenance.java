@@ -8,6 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Entity
 @Table(name = "Food")
 public class Sustenance {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Value("${some.key:0}")

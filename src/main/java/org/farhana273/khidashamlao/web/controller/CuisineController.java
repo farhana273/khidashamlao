@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(path = "/cuisine")
 public class CuisineController {
+	
 	private final CuisineServiceImpl cuisineService;
 
 	@Autowired
@@ -32,7 +33,7 @@ public class CuisineController {
 	}
 
 	/**
-	 *GET/cuisine/welcome: Displays a welcome message
+	 * GET/cuisine/welcome: Displays a welcome message
 	 *
 	 * @return A success message
 	 */
@@ -54,23 +55,10 @@ public class CuisineController {
 	}
 
 	/**
-	 * DELETE /cuisine/delete/:id : Deletes a cuisine.
-	 *
-	 * @param id is the id of the object that is to be deleted
-	 * @return A success message
-	 */
-	@DeleteMapping(path = "/delete/{id}")
-	public String deleteCuisine(@PathVariable long id) {
-
-		cuisineService.deleteCuisine(id);
-		return "Cuisine deleted";
-	}
-
-	/**
 	 * GET /cuisine/:id : Get a Cuisine from the database with the given id
 	 *
-	 *@param id specifies the id of the object of the cuisine that is to be shown from the database
-	 *@return the ResponseEntity with status 200 (OK) and with cuisine in the body, or with status 404 (Not Found)
+	 * @param id specifies the id of the object of the cuisine that is to be shown from the database
+	 * @return the ResponseEntity with status 200 (OK) and with cuisine in the body, or with status 404 (Not Found)
 	 */
 	@GetMapping(path = "{id}")
 	public ResponseEntity<Cuisine> showCuisine(@PathVariable long id) {
@@ -81,8 +69,8 @@ public class CuisineController {
 	/**
 	 * GET /cuisine: Get all cuisines from the database 
 	 *
-	 *@param pageable the pagination information
-	 *@return the ResponseEntity with status 200 (OK) and with cuisine in the body, or with status 404 (Not Found)
+	 * @param pageable the pagination information
+	 * @return the ResponseEntity with status 200 (OK) and with cuisine in the body, or with status 404 (Not Found)
 	 */
 	@GetMapping(path = "")
 	public ResponseEntity<List<Cuisine>> getAllCuisines(Pageable pageable) {
@@ -91,6 +79,19 @@ public class CuisineController {
 		return new ResponseEntity<List<Cuisine>>(page.getContent(), HttpStatus.OK);
 	}
 
+	/**
+	 * DELETE /cuisine/delete/:id : Deletes a cuisine.
+	 *
+	 * @param id is the id of the object that is to be deleted
+	 * @return A success message
+	 */
+	
+	@DeleteMapping(path = "/delete/{id}")
+	public String deleteCuisine(@PathVariable long id) {
+
+		cuisineService.deleteCuisine(id);
+		return "Cuisine deleted";
+	}
 }
 
 

@@ -8,6 +8,7 @@ import java.util.Date;
 @Entity
 @Table(name = "User")
 public class User {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Value("${some.key:0}")

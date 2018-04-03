@@ -8,7 +8,7 @@ import org.farhana273.khidashamlao.domain.*;
 import org.farhana273.khidashamlao.service.UserServiceImpl;
 import org.farhana273.khidashamlao.util.PaginationUtil;
 import org.farhana273.khidashamlao.vm.UserVM;
-import org.farhana273.khidashamlao.vmutility.UserVMUtility;
+import org.farhana273.khidashamlao.vm.vmutility.UserVMUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(path = "/user")
 public class UserController {
+	
 	private final UserServiceImpl userService;
 
 	@Autowired
@@ -35,7 +36,7 @@ public class UserController {
 	}
 
 	/**
-	 *GET /user/welcome: Displays a welcome message
+	 * GET /user/welcome: Displays a welcome message
 	 *
 	 * @return A success message
 	 */
@@ -55,25 +56,12 @@ public class UserController {
         User user = userService.save(UserVMUtility.mapToUser(userVM));
         return new ResponseEntity<User>(user, HttpStatus.OK);
     }
-
-	/**
-	 * DELETE /user/:id : Deletes a user.
-	 *
-	 * @param id is the id of the object that is to be deleted
-	 * @return A success message
-	 */
-	@DeleteMapping(path = "{id}")
-	public String deleteUser(@PathVariable long id) {
-
-		userService.deleteUser(id);
-		return "user deleted";
-	}
-
-	/**
+    
+    /**
 	 * GET /user/:id : Get a user from the database with the given id
 	 *
-	 *@param id specifies the id of the object of the user that is to be shown from the database
-	 *@return the ResponseEntity with status 200 (OK) and with user in the body, or with status 404 (Not Found)
+	 * @param id specifies the id of the object of the user that is to be shown from the database
+	 * @return the ResponseEntity with status 200 (OK) and with user in the body, or with status 404 (Not Found)
 	 */
 	@GetMapping(path = "{id}")
 	public ResponseEntity<User> showUser(@PathVariable long id) {
@@ -84,8 +72,8 @@ public class UserController {
 	/**
 	 * GET /user: Get all users from the database 
 	 *
-	 *@param pageable the pagination information
-	 *@return the ResponseEntity with status 200 (OK) and with user in the body, or with status 404 (Not Found)
+	 * @param pageable the pagination information
+	 * @return the ResponseEntity with status 200 (OK) and with user in the body, or with status 404 (Not Found)
 	 */
 	@GetMapping(path = "")
 	public ResponseEntity<List<User>> getAllUsers(Pageable pageable) {
@@ -94,12 +82,11 @@ public class UserController {
 		return new ResponseEntity<List<User>>(page.getContent(), HttpStatus.OK);
 	}
 
-
 	/**
 	 * PUT /editUserInfo : Edit information of a user 
 	 *
-	 *@param user is the object initiated  with the information from the JSON input
-	 *@return the ResponseEntity with status 200 (OK) and with user in the body, or with status 404 (Not Found)
+	 * @param user is the object initiated  with the information from the JSON input
+	 * @return the ResponseEntity with status 200 (OK) and with user in the body, or with status 404 (Not Found)
 	 *//*
 	@PutMapping(path = "/editUserInfo")
 	public ResponseEntity<User> editUserInfo(@RequestBody User user) {
@@ -112,8 +99,8 @@ public class UserController {
 	/**
 	 * PUT /user/updatePassword/{id}/{password} : Change password of a user 
 	 *
-	 *@param id is the id of the object of the user whose password is to be changed and @param password is the new password
-	 *@return the ResponseEntity with status 200 (OK) and with user in the body, or with status 404 (Not Found)
+	 * @param id is the id of the object of the user whose password is to be changed and @param password is the new password
+	 * @return the ResponseEntity with status 200 (OK) and with user in the body, or with status 404 (Not Found)
 	 */
 
 	@PutMapping(value = "updatePassword/{id}/{password}")
@@ -121,6 +108,19 @@ public class UserController {
 			@PathVariable String password) {
 		userService.updatePassword(id, password);
 		return new ResponseEntity<User>(userService.findUser(id), HttpStatus.OK);
+	}
+
+	/**
+	 * DELETE /user/:id : Deletes a user.
+	 *
+	 * @param id is the id of the object that is to be deleted
+	 * @return A success message
+	 */
+	@DeleteMapping(path = "{id}")
+	public String deleteUser(@PathVariable long id) {
+
+		userService.deleteUser(id);
+		return "user deleted";
 	}
 }
 

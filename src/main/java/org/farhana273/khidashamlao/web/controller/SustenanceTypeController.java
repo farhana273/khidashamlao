@@ -23,21 +23,23 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(path = "/sustenanceType")
 public class SustenanceTypeController {
+	
 	private final SustenanceTypeServiceImpl sustenanceTypeService;
 
 	@Autowired
 	public SustenanceTypeController(SustenanceTypeServiceImpl sustenanceTypeService) {
+		
 		this.sustenanceTypeService = sustenanceTypeService;
-
-	}
+}
 
 	/**
-	 *GET/sustenanceType/welcome: Displays a welcome message
+	 * GET/sustenanceType/welcome: Displays a welcome message
 	 *
 	 * @return A success message
 	 */
 	@RequestMapping(path = "/welcome")
 	public String welcome() {
+		
 		return "Welcome to the sustenanceType panel";
 	}
 
@@ -49,8 +51,36 @@ public class SustenanceTypeController {
 	 */
 	@PostMapping(path = "")
 	public ResponseEntity<SustenanceType> addNewSustenanceType(@RequestBody SustenanceType sustenanceType) {
+		
 		sustenanceTypeService.saveSustenanceType(sustenanceType);
 		return new ResponseEntity<SustenanceType>(sustenanceType, HttpStatus.OK);
+	}
+	
+	/**
+	 * GET /sustenanceType/:id : Get a SustenanceType from the database with the given id
+	 *
+	 * @param id specifies the id of the object of the sustenanceType that is to be shown from the database
+	 * @return the ResponseEntity with status 200 (OK) and with sustenanceType in the body, or with status 404 (Not Found)
+	 */
+	@GetMapping(path = "{id}")
+	public ResponseEntity<SustenanceType> showSustenanceType(@PathVariable long id) {
+		
+		SustenanceType sustenanceType = sustenanceTypeService.findSustenanceType(id);
+		return new ResponseEntity<SustenanceType>(sustenanceType, HttpStatus.OK);
+	}
+
+	/**
+	 * GET /sustenanceType: Get all sustenanceTypes from the database 
+	 *
+	 * @param pageable the pagination information
+	 * @return the ResponseEntity with status 200 (OK) and with sustenanceType in the body, or with status 404 (Not Found)
+	 */
+	@GetMapping(path = "")
+	public ResponseEntity<List<SustenanceType>> getAllSustenanceTypes(Pageable pageable) {
+		
+		Page<SustenanceType> page = sustenanceTypeService.showAllSustenanceTypes(pageable);
+		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "localhost:8080/sustenanceType");
+		return new ResponseEntity<List<SustenanceType>>(page.getContent(), HttpStatus.OK);
 	}
 
 	/**
@@ -65,32 +95,6 @@ public class SustenanceTypeController {
 		sustenanceTypeService.deleteSustenanceType(id);
 		return "SustenanceType deleted";
 	}
-
-	/**
-	 * GET /sustenanceType/:id : Get a SustenanceType from the database with the given id
-	 *
-	 *@param id specifies the id of the object of the sustenanceType that is to be shown from the database
-	 *@return the ResponseEntity with status 200 (OK) and with sustenanceType in the body, or with status 404 (Not Found)
-	 */
-	@GetMapping(path = "{id}")
-	public ResponseEntity<SustenanceType> showSustenanceType(@PathVariable long id) {
-		SustenanceType sustenanceType = sustenanceTypeService.findSustenanceType(id);
-		return new ResponseEntity<SustenanceType>(sustenanceType, HttpStatus.OK);
-	}
-
-	/**
-	 * GET /sustenanceType: Get all sustenanceTypes from the database 
-	 *
-	 *@param pageable the pagination information
-	 *@return the ResponseEntity with status 200 (OK) and with sustenanceType in the body, or with status 404 (Not Found)
-	 */
-	@GetMapping(path = "")
-	public ResponseEntity<List<SustenanceType>> getAllSustenanceTypes(Pageable pageable) {
-		Page<SustenanceType> page = sustenanceTypeService.showAllSustenanceTypes(pageable);
-		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "localhost:8080/sustenanceType");
-		return new ResponseEntity<List<SustenanceType>>(page.getContent(), HttpStatus.OK);
-	}
-
 }
 
 
